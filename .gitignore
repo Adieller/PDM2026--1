@@ -1,0 +1,32 @@
+# Archivos de configuración locales
+local.properties
+
+# Carpetas del IDE (IntelliJ / Android Studio)
+.idea/
+
+# Archivos de caché y configuración de Gradle
+.gradle/
+gradlew
+gradlew.bat
+gradle/wrapper/gradle-wrapper.properties
+
+# Carpetas de compilación
+# Aplicamos esto a cualquier carpeta 'build' en cualquier subdirectorio
+**/build/
+
+# Archivos de proyecto de IntelliJ
+*.iml
+*.ipr
+*.iws
+
+# Archivos de empaquetado
+*.apk
+*.aab
+*.jar
+
+# Capturas de pantalla o videos del emulador
+captures/
+
+# Archivos de sistema operativo (macOS y Windows)
+.DS_Store
+Thumbs.db
