@@ -58,7 +58,7 @@
         app:layout_constraintTop_toBottomOf="@id/textViewBrand" />
 
     <EditText
-        android:id="@+id/newpsw"
+        android:id="@+id/txtfieldCorreo"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginStart="32dp"
@@ -76,7 +76,7 @@
         app:layout_constraintTop_toBottomOf="@id/textViewInstructionsreset" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/buttonValidateEmail"
+        android:id="@+id/buttonRecuperarCuenta"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginStart="32dp"
@@ -89,7 +89,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/newpsw" />
+        app:layout_constraintTop_toBottomOf="@id/txtfieldCorreo" />
 
     <TextView
         android:id="@+id/textViewBackToLogin"
@@ -101,6 +101,6 @@
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/buttonValidateEmail" />
+        app:layout_constraintTop_toBottomOf="@id/buttonRecuperarCuenta" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

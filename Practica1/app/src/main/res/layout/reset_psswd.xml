@@ -50,7 +50,7 @@
         android:id="@+id/newpsw"
         android:layout_width="243dp"
         android:layout_height="57dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="36dp"
         android:background="@drawable/edit_text_background"
         android:hint="Nueva contraseña"
         android:inputType="textPassword"
@@ -67,6 +67,7 @@
         android:id="@+id/newpswcon"
         android:layout_width="243dp"
         android:layout_height="57dp"
+        android:layout_marginTop="28dp"
         android:background="@drawable/edit_text_background"
         android:hint="Confirmar contraseña"
         android:inputType="textPassword"
@@ -75,13 +76,13 @@
         android:paddingEnd="20dp"
         android:textColor="@android:color/white"
         android:textColorHint="@color/textColorSecondary"
-        app:layout_constraintBottom_toTopOf="@+id/buttonValidateEmail"
+        app:layout_constraintBottom_toTopOf="@+id/buttonValidarRespuesta"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/newpsw" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/buttonValidateEmail"
+        android:id="@+id/buttonConfirmarNuevaContra"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginStart="32dp"
@@ -107,6 +108,6 @@
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/buttonValidateEmail" />
+        app:layout_constraintTop_toBottomOf="@id/buttonConfirmarNuevaContra" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
