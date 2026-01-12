@@ -1,0 +1,37 @@
+[
+  {
+    "name": "Adiel Rey",
+    "email": "adiel.rey@gmail.com",
+    "passwd": "1bf9e1b843a8da669bf60cfc70400f25aa1dffd8aa1285fa6ae650fc4123af60",
+    "pregunta": "¿Cuál  es tu comida favorita?",
+    "respuesta": "pozole"
+  },
+  {
+    "name": "Mariana López",
+    "email": "mariana.lopez@outlook.com",
+    "passwd": "Lunn4.Azul#99",
+    "pregunta": "¿Cuál es el nombre de tu primera mascota?",
+    "respuesta": "toby"
+  },
+  {
+    "name": "Carlos Fuentes",
+    "email": "carlos.fuentes88@yahoo.com",
+    "passwd": "Gato_Negro22!",
+    "pregunta": "¿En qué ciudad naciste?",
+    "respuesta": "guadalajara"
+  },
+  {
+    "name": "Elena Torres",
+    "email": "elena_t@hotmail.com",
+    "passwd": "P4ss.w0rd.Segura",
+    "pregunta": "¿Cuál es el apellido de soltera de tu madre?",
+    "respuesta": "ramirez"
+  },
+  {
+    "name": "Jorge Méndez",
+    "email": "jorge.dev@gmail.com",
+    "passwd": "Xyz.987654",
+    "pregunta": "¿Cuál es tu película favorita?",
+    "respuesta": "matrix"
+  }
+]

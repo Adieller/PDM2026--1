@@ -1,13 +1,16 @@
 package edu.ipn.upiita.pdm.practica1.view
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import edu.ipn.upiita.pdm.practica1.R
 import edu.ipn.upiita.pdm.practica1.databinding.ActivityLoginBinding
+import edu.ipn.upiita.pdm.practica1.model.UserProvider
 
 class LoginActivity : AppCompatActivity() {
     //Se declara la variable binding para utilizar el activity binding
@@ -22,7 +25,14 @@ class LoginActivity : AppCompatActivity() {
 
 
         enableEdgeToEdge()
+    //Una vez que inicie la app se cargan directamente los datos del json y se copian en listU para tenerlos en memoria y poder trabajar directamente con los datos
+        UserProvider.copyJsonToInternal(this)
+        UserProvider.readUsersFromAssets(this)
 
+        //este pequeño bloque es solo academico y ayuda debuggear en consola que se hayan caargado los datos coprrectamente en la memoria ram para esta practioca es meramenmte academico
+        UserProvider.listU.forEach {
+            Log.d("LoginDebug", "User: ${it.email}, Pass: ${it.passwd}")
+        }
         //Aqui utilizamos directamente con el binding el id del boton para hacer directamenta la navegacion a la patalla de olvide mi contraseña
 
         binding.forgotPsswrdButton.setOnClickListener {
@@ -31,5 +41,28 @@ class LoginActivity : AppCompatActivity() {
             // 2. Iniciar la nueva Activity
             startActivity(intent)
         }
+
+        binding.loginButton.setOnClickListener {
+            val email = binding.inputEmail.text.toString().trim()
+            val password = binding.psswordInput.text.toString().trim()
+            if (!UserProvider.isValidEmail(email)) {
+                Toast.makeText(this, "Favor de Ingresar un correo valido!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            else{
+                // Validate
+                val isValid = UserProvider.validateEmailPw(email, password)
+
+                if (isValid) {
+                    val intent = Intent(this, HomeActivity::class.java)
+                    intent.putExtra("email_key", email)
+                    startActivity(intent)
+                    finish()
+                } else {
+                    Toast.makeText(this, "Email o password invalidos!", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
     }
 }
