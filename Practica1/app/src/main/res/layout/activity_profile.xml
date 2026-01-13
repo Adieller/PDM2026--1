@@ -12,7 +12,7 @@
         android:id="@+id/tvProfileTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="40dp"
         android:text="Mi Perfil"
         android:textColor="@android:color/white"
         android:textSize="26sp"
@@ -22,21 +22,19 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/imgAvatar"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginTop="32dp"
-        android:src="@android:drawable/sym_def_app_icon"
-        app:tint="@android:color/white"
+        android:id="@+id/imageView3"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvProfileTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/tvProfileTitle"
+        app:srcCompat="@drawable/icono_ciberpunk" />
 
     <TextView
         android:id="@+id/labelName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
         android:layout_marginBottom="8dp"
         android:text="Nombre de Usuario"
         android:textColor="@color/login_input_hint"
@@ -48,7 +46,7 @@
         android:id="@+id/tvUserNameValue"
         android:layout_width="280dp"
         android:layout_height="55dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="50dp"
         android:background="@drawable/edit_text_background"
         android:gravity="center_vertical"
         android:paddingStart="20dp"
@@ -57,13 +55,12 @@
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgAvatar" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
     <TextView
         android:id="@+id/labelEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
         android:layout_marginBottom="8dp"
         android:text="Correo Electrónico"
         android:textColor="@color/login_input_hint"

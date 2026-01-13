@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="64dp"
-        android:text="Restablecer contraseña"
+        android:text="ACTUALIZAR CONTRASEÑA"
         android:textColor="@android:color/white"
         android:textSize="28sp"
         android:textStyle="bold"

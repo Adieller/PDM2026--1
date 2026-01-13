@@ -2,9 +2,7 @@ package edu.ipn.upiita.pdm.practica1.model
 
 import android.content.Context
 import java.io.File
-import java.io.FileWriter
 import java.security.MessageDigest
-import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -111,6 +109,11 @@ class UserProvider {
                 }
             }
             return false
+        }
+        //Valida que la contraseña que se escriba cumpla con las condiciones solicitadas de al menos 1 numero al menos una mayuzcula al menos un caracter especial y que tenga al menos 8 digitos
+        fun isValidPassword(password: String): Boolean{
+            val passwordRegex = Regex("^(?=.*[A-Z])(?=.*[0-9])(?=.*[_.#$?]).{8,}$")
+            return passwordRegex.matches(password)
         }
 
         fun isRepeatingPassword(email: String, currentPassword: String): Boolean {

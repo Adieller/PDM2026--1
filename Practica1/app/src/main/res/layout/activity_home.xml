@@ -3,74 +3,105 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
     tools:context=".view.HomeActivity">
 
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_marginTop="16dp"
+
+        android:background="@color/colorPrimaryDark"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:titleTextColor="@android:color/white" />
+
     <ImageView
         android:id="@+id/homeLogo"
-        android:layout_width="150dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="60dp"
+        android:layout_width="164dp"
+        android:layout_height="96dp"
+        android:layout_marginTop="52dp"
         android:src="@drawable/logo_adiel"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <TextView
         android:id="@+id/tvWelcomeTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="¡Bienvenido!"
-        android:textColor="@android:color/white"
-        android:textSize="28sp"
-        android:textStyle="bold"
+        android:layout_marginTop="4dp"
+        android:text="¡Hola de nuevo!"
+        android:textColor="@color/login_input_hint"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/homeLogo" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
     <TextView
-        android:id="@+id/tvWelcomeMessage"
+        android:id="@+id/tvUserNameDisplay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Has iniciado sesión correctamente."
-        android:textColor="@color/login_input_hint"
-        android:textSize="16sp"
+        android:text=""
+        android:textColor="@android:color/white"
+        android:textSize="32sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.412"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvWelcomeTitle" />
+
+    <TextView
+        android:id="@+id/tvSubtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:paddingHorizontal="32dp"
+        android:text="Has iniciado sesión correctamente. \n¿Qué deseas hacer hoy?"
+        android:textColor="@color/login_input_hint"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvUserNameDisplay" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnGoToProfile"
         android:layout_width="265dp"
         android:layout_height="50dp"
+        android:layout_marginTop="50dp"
         android:background="@drawable/button_gradient_background"
-        android:text="VER MI PERFIL"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/btnLogout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvWelcomeMessage"
-        app:layout_constraintVertical_bias="0.6" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnLogout"
-        android:layout_width="265dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="100dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/button_gradient_background"
-        android:text="CERRAR SESIÓN"
+        android:text="VER MI PERFIL COMPLETO"
         android:textColor="@android:color/white"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvSubtitle"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="155dp"
+        android:layout_height="126dp"
+        android:layout_marginTop="44dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/homeLogo"
+        app:srcCompat="@drawable/icono_ciberpunk" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -43,7 +43,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.loginButton.setOnClickListener {
-            val email = binding.inputEmail.text.toString().trim()
+            val email = binding.inputEmail.text.toString().trim().lowercase()
             val password = binding.psswordInput.text.toString().trim()
             if (!UserProvider.isValidEmail(email)) {
                 Toast.makeText(this, "Favor de Ingresar un correo valido!", Toast.LENGTH_SHORT).show()

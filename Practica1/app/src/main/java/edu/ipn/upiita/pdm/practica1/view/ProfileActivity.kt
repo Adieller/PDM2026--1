@@ -1,9 +1,11 @@
 package edu.ipn.upiita.pdm.practica1.view
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import edu.ipn.upiita.pdm.practica1.databinding.ActivityProfileBinding
+import edu.ipn.upiita.pdm.practica1.model.UserProvider
 
 class ProfileActivity : AppCompatActivity() {
     //Se declara la variable binding para utilizar el activity binding
@@ -17,5 +19,14 @@ class ProfileActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         enableEdgeToEdge()
+        val email = intent.getStringExtra("email_key").toString().lowercase()
+        binding.btnBack.setOnClickListener {
+            val intent = Intent(this, HomeActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+        binding.tvUserNameValue.text = UserProvider.getUsernameByEmail(email)
+        binding.tvUserEmailValue.text = email
+        
     }
 }
