@@ -9,8 +9,11 @@ import edu.ipn.upiita.pdm.practica2.ui.Navigator
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val appContainer = application as LoginApplication
+        val userRepository = appContainer.repository
+
         setContent {
-            Navigator()
+            Navigator(userRepository = userRepository)
         }
     }
 }

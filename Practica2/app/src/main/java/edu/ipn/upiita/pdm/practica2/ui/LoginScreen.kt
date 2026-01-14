@@ -36,128 +36,139 @@ val NeonCyan = Color(0xFF00E5FF)
 val NeonBlue = Color(0xFF2979FF)
 val DarkBackground = Color(0xFF121212).copy(alpha = 0.8f)
 val FieldBackgroundColor = Color(0xFF1E1E1E).copy(alpha = 0.7f)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun LoginScreen(navController: NavHostController){
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        // 1. Fondo de imagen
-        Image(
-            // Reemplaza 'R.drawable.cyberpunk_bg' con el ID de tu imagen de fondo
-            painter = painterResource(id = R.drawable.fondofallenangels),
-            contentDescription = "Fondo Cyberpunk",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
-        )
+fun LoginScreen(navController: NavHostController) {
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        // Hacemos el fondo del Scaffold transparente para que se vea tu imagen
+        containerColor = Color.Transparent
+    ) { innerPadding ->
 
-        // 2. Capa de oscurecimiento (opcional, para mejorar el contraste)
+        // Box principal que contiene el fondo y el contenido
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(DarkBackground)
-        )
-
-        // 3. Contenido principal en una columna centrada
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            // (Opcional) Si quieres que el fondo respete las barras de sistema, mueve este padding al Column.
+            // Si quieres fondo pantalla completa, déjalo sin padding aquí y úsalo solo en el contenido.
         ) {
-            // Título con efecto neón
-            Text(
-                text = "FALLEN ANGELS\nLOGIN",
-                style = TextStyle(
-                    color = Color.White,
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    shadow = Shadow(
-                        color = NeonCyan,
-                        offset = Offset(0f, 0f),
-                        blurRadius = 20f
+            // 1. Fondo de imagen (Ocupa toda la pantalla)
+            Image(
+                painter = painterResource(id = R.drawable.fondofallenangels),
+                contentDescription = "Fondo Cyberpunk",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
+
+            // 2. Capa de oscurecimiento
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(DarkBackground) // Asegúrate de tener definido este color
+            )
+
+            // 3. Contenido principal
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding) // AQUI aplicamos el padding del Scaffold
+                    .padding(horizontal = 32.dp), // Tu padding lateral original
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                // Título con efecto neón
+                Text(
+                    text = "FALLEN ANGELS\nLOGIN",
+                    style = TextStyle(
+                        color = Color.White,
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        shadow = Shadow(
+                            color = NeonCyan, // Asegúrate de tener definido este color
+                            offset = Offset(0f, 0f),
+                            blurRadius = 20f
+                        )
                     )
                 )
-            )
 
-            Spacer(modifier = Modifier.height(48.dp))
+                Spacer(modifier = Modifier.height(48.dp))
 
-            // Campo de texto de Usuario
-            NeonTextField(
-                value = "",
-                onValueChange = {},
-                placeholder = "NOMBRE DE USUARIO"
-            )
+                // Campo de texto de Usuario
+                NeonTextField(
+                    value = "",
+                    onValueChange = {},
+                    placeholder = "NOMBRE DE USUARIO"
+                )
 
-            Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
-            // Campo de texto de Contraseña
-            NeonTextField(
-                value = "",
-                onValueChange = {},
-                placeholder = "CONTRASEÑA",
-                isPassword = true
-            )
+                // Campo de texto de Contraseña
+                NeonTextField(
+                    value = "",
+                    onValueChange = {},
+                    placeholder = "CONTRASEÑA",
+                    isPassword = true
+                )
 
-            Spacer(modifier = Modifier.height(36.dp))
+                Spacer(modifier = Modifier.height(36.dp))
 
-            // Botón de Entrar con gradiente y brillo
-            Button(
-                onClick = { /* Acción de login */ },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-                    .shadow(
-                        elevation = 12.dp,
-                        shape = RoundedCornerShape(28.dp),
-                        spotColor = NeonPurple,
-                        ambientColor = NeonPurple
-                    ),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent // Para usar el gradiente del Box interno
-                ),
-                contentPadding = PaddingValues(0.dp),
-                shape = RoundedCornerShape(28.dp)
-            ) {
-                Box(
+                // Botón de Entrar
+                Button(
+                    //En el onne click poner la funcion que valide el nombre y contraseña para que pase a ala siguiente ventana
+                    onClick = { navController.navigate("home") },
                     modifier = Modifier
-                        .fillMaxSize()
-                        .background(
-                            brush = Brush.horizontalGradient(
-                                colors = listOf(NeonPurple, NeonBlue)
-                            ),
-                            shape = RoundedCornerShape(28.dp)
+                        .fillMaxWidth()
+                        .height(56.dp)
+                        .shadow(
+                            elevation = 12.dp,
+                            shape = RoundedCornerShape(28.dp),
+                            spotColor = NeonPurple, // Asegúrate de tener definido este color
+                            ambientColor = NeonPurple
                         ),
-                    contentAlignment = Alignment.Center
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent
+                    ),
+                    contentPadding = PaddingValues(0.dp),
+                    shape = RoundedCornerShape(28.dp)
                 ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(
+                                brush = Brush.horizontalGradient(
+                                    colors = listOf(NeonPurple, NeonBlue) // Asegúrate de tener definidos estos colores
+                                ),
+                                shape = RoundedCornerShape(28.dp)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "ENTRAR",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Enlaces de texto
+                TextButton(onClick = { navController.navigate("recovery") }) {
                     Text(
-                        text = "ENTRAR",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        text = "SE ME OLVIDÓ LA CONTRASEÑA",
+                        color = NeonCyan,
+                        textDecoration = TextDecoration.Underline
                     )
                 }
-            }
 
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Enlaces de texto
-            TextButton(onClick = { /* Acción de recuperar contraseña */ }) {
-                Text(
-                    text = "SE ME OLVIDÓ LA CONTRASEÑA",
-                    color = NeonCyan,
-                    textDecoration = TextDecoration.Underline
-                )
-            }
-
-            TextButton(onClick = { /* Acción de registrar */ }) {
-                Text(
-                    text = "REGISTRAR NUEVO USUARIO",
-                    color = NeonCyan,
-                    textDecoration = TextDecoration.Underline
-                )
+                TextButton(onClick = { navController.navigate("registro") }) {
+                    Text(
+                        text = "REGISTRATE",
+                        color = NeonCyan,
+                        textDecoration = TextDecoration.Underline
+                    )
+                }
             }
         }
     }
