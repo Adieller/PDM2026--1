@@ -32,9 +32,21 @@ interface UserDao {
     @Query("SELECT *FROM users")
     fun getAllUsers(): Flow<List<User>>
 
-    // Busca un usuario donde el email coincida.
+    // Busca un usuario donde el username coincida.
     // Devuelve null si no existe.
     @Query("SELECT * FROM users WHERE username = :username LIMIT 1")
     suspend fun getUserByUsername(username: String): User?
+
+    //query y funcion para buscar un email en los users registrados y si no existe devolver un null
+    @Query("SELECT *FROM users WHERE email = :email LIMIT 1")
+    suspend fun getEmailByEmail(email: String): User?
+
+    // 1. Buscar usuario por email
+    @Query("SELECT * FROM users WHERE email = :email LIMIT 1")
+    suspend fun getUserByEmail(email: String): User?
+
+    // 2. Actualizar contraseña
+    @Query("UPDATE users SET password = :newPassword WHERE email = :email")
+    suspend fun updatePassword(email: String, newPassword: String)
 
 }

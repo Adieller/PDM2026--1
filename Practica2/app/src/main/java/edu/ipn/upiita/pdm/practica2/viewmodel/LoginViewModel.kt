@@ -22,7 +22,7 @@ class LoginViewModel(private val repository: UserRepository) : ViewModel() {
     var contrasenaError  by mutableStateOf<String?>(null)
 
     // Función modificada para Room
-    fun validarLogin(onLoginSuccess: () -> Unit) {
+    fun validarLogin(onLoginSuccess: (String) -> Unit) {
         // 1. Validaciones básicas de campos vacíos
         if (usuario.isBlank() || contrasena.isBlank()) {
             if (usuario.isBlank()) usuarioError = "Requerido"
@@ -42,7 +42,7 @@ class LoginViewModel(private val repository: UserRepository) : ViewModel() {
                     // ¡Éxito! Limpiamos errores y navegamos
                     usuarioError = null
                     contrasenaError = null
-                    onLoginSuccess()
+                    onLoginSuccess(usuarioEncontrado.username)
                 } else {
                     contrasenaError = "Contraseña incorrecta"
                 }

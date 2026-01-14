@@ -122,8 +122,8 @@ fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = vi
                     //En el onne click poner la funcion que valide el nombre y contraseña para que pase a ala siguiente ventana
                     onClick = {
                         viewModel.validarLogin(
-                            onLoginSuccess = {
-                                navController.navigate("home") {
+                            onLoginSuccess = { nombreUsuario ->
+                                navController.navigate("home/$nombreUsuario") {
                                     popUpTo("login") { inclusive = true }
                                 }
                             }

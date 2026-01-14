@@ -2,9 +2,11 @@ package edu.ipn.upiita.pdm.practica2.ui
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import edu.ipn.upiita.pdm.practica2.data.UserRepository
 import edu.ipn.upiita.pdm.practica2.viewmodel.FormRegViewModel
 import edu.ipn.upiita.pdm.practica2.viewmodel.LoginViewModel
@@ -41,7 +43,13 @@ fun Navigator(userRepository: UserRepository) {
                 }
             )
         }
-        composable("home") { HomeScreen(navController) }
+        composable(
+            "home/{name}",
+            arguments = listOf(navArgument("name"){ type = NavType.StringType })
+        ) { backStackEntry ->
+            val userName = backStackEntry.arguments?.getString("name") ?: "Usuario"
+            HomeScreen(navController = navController, userName = userName)
+        }
 
     }
 }

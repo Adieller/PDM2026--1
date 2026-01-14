@@ -26,9 +26,22 @@ class UserRepository(private val userDao: UserDao) {
         userDao.insert(user)
     }
 
+    //Funcion para conectar con el dao y devolver el usuario si existe en la base de datos o null si no existe
     suspend fun getUserByUsername(username: String): User? {
         return userDao.getUserByUsername(username)
     }
 
+    //Funcion para conectar con el dao y devolver el email si existe en la base de datos o null si no existe
+    suspend fun getEmailByEmail(email: String): User?{
+        return userDao.getEmailByEmail(email)
+    }
+
+    suspend fun getUserByEmail(email: String): User?{
+        return userDao.getUserByEmail(email)
+    }
+
+    suspend fun updatePassword(email: String, newPassword: String){
+        return userDao.updatePassword(email, newPassword)
+    }
 
 }

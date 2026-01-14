@@ -21,35 +21,80 @@ class FormRegViewModel(private val repository: UserRepository) : ViewModel() {
     var confirmarContrasena by mutableStateOf("")
     var email by mutableStateOf("")
 
+    var pregunta by mutableStateOf("")
+    var respuesta by mutableStateOf("")
+
+
     var usuarioError  by mutableStateOf<String?>(null)
     var contrasenaError  by mutableStateOf<String?>(null)
     var confirmarContrasenaError  by mutableStateOf<String?>(null)
     var emailError  by mutableStateOf<String?>(null)
 
+    var preguntaError by mutableStateOf<String?>(null)
+    var respuestaError by mutableStateOf<String?>(null)
+
+
     var registroExitoso by mutableStateOf(false)
 
-    fun validarCampos(): Boolean {
+    suspend fun validarCampos(): Boolean {
         var isValid = true
 
+        // 1. Validar Usuario
         usuarioError = if (usuario.isBlank()) {
             isValid = false
             "El nombre es obligatorio"
-        } else null
+        } else if (userExist(usuario)) { // Llamada suspendida
+            isValid = false
+            "El nombre de usuario ya fue registrado"
+        } else {
+            null
+        }
 
-        emailError = if (!isEmailValido(email)) {
+        // 2. Validar Email
+        emailError = if (email.isBlank()) {
+            isValid = false
+            "Este campo es obligatorio"
+        } else if (!isEmailValido(email)) {
             isValid = false
             "Correo no válido"
-        } else null
-
-        contrasenaError = if (!isValidPassword(contrasena)) {
+        } else if (emailExist(email)) { // Llamada suspendida
             isValid = false
-            "La contraseña debe tener al menos 8 caracteres,un numero, una mayuscula y un signo especial"
-        } else null
+            "El correo ya fue registrado"
+        } else {
+            null
+        }
 
-        confirmarContrasenaError = if (confirmarContrasena != contrasena) {
+        // 3. Validar Contraseña (Síncrono)
+        contrasenaError = if (contrasena.isBlank()) {
+            isValid = false
+            "Este campo es obligatorio"
+        } else if (!isValidPassword(contrasena)) {
+            isValid = false
+            "La contraseña debe tener al menos 8 caracteres, un número, una mayúscula y un signo especial"
+        } else {
+            null
+        }
+
+        // 4. Confirmar Contraseña (Síncrono)
+        confirmarContrasenaError = if (confirmarContrasena.isBlank()) {
+            isValid = false
+            "Este campo es obligatorio"
+        } else if (confirmarContrasena != contrasena) {
             isValid = false
             "Las contraseñas no coinciden"
-        } else null
+        } else {
+            null
+        }
+
+        preguntaError = if(pregunta.isBlank()){
+            isValid = false
+            "Este campo es obligatorio"
+        }else null
+
+        respuestaError = if(respuesta.isBlank()){
+            isValid = false
+            "Este campo es obligatorio"
+        }else null
 
         registroExitoso = isValid
         return isValid
@@ -66,6 +111,35 @@ class FormRegViewModel(private val repository: UserRepository) : ViewModel() {
             "^(?=.*[A-Z])(?=.*[0-9])(?=.*[_.#$?]).{8,}$"
         )
         return pattern.matcher(password).matches()
+    }
+
+
+    suspend fun userExist(usuario: String): Boolean {
+        return repository.getUserByUsername(usuario) != null
+    }
+    suspend fun emailExist(email: String): Boolean{
+        return repository.getEmailByEmail(email) != null
+    }
+
+    fun intentarRegistro(onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            // 1. Validar (espera a la BD)
+            if (validarCampos()) {
+                // 2. Crear usuario con los datos que YA tiene el ViewModel
+                val newUser = User(
+                    username = usuario,
+                    password = contrasena,
+                    email = email,
+                    securityQuestion = pregunta,
+                    securityAnswer = respuesta
+                )
+                // 3. Guardar
+                addUser(newUser)
+
+                // 4. Avisar a la vista que terminó bien (para navegar)
+                onSuccess()
+            }
+        }
     }
 
 

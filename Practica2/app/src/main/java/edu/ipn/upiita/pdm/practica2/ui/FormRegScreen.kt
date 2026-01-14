@@ -25,15 +25,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import edu.ipn.upiita.pdm.practica2.viewmodel.FormRegViewModel
+
 import edu.ipn.upiita.pdm.practica2.R
-import edu.ipn.upiita.pdm.practica2.model.User
 
 
 @Composable
 fun FormRegScreen(navController: NavHostController,viewModel: FormRegViewModel = viewModel(),onBack: () -> Unit){
-// --- ESTADOS PARA LOS CAMPOS DEL FORMULARIO ---
+
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -41,7 +40,7 @@ fun FormRegScreen(navController: NavHostController,viewModel: FormRegViewModel =
     ) { innerPadding ->
 
         Box(modifier = Modifier.fillMaxSize()) {
-            // 1. Fondo de imagen (El mismo que el login)
+
             Image(
                 painter = painterResource(id = R.drawable.fondo_homefa),
                 contentDescription = "Fondo Cyberpunk",
@@ -128,21 +127,35 @@ fun FormRegScreen(navController: NavHostController,viewModel: FormRegViewModel =
 
                 )
 
-                Spacer(modifier = Modifier.height(40.dp))
+                Spacer(modifier = Modifier.height(20.dp))
+
+                // 5. Pregunta de seguridad
+                NeonTextField(
+                    value = viewModel.pregunta,
+                    onValueChange = { viewModel.pregunta = it },
+                    error = viewModel.preguntaError,
+                    placeholder = "PREGUNTA DE SEGURIDAD",
+
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+
+                // 6. Respuesta de seguridad
+                NeonTextField(
+                    value = viewModel.respuesta,
+                    onValueChange = { viewModel.respuesta = it },
+                    error = viewModel.respuestaError,
+                    placeholder = "Respuesta",
+
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
 
                 // --- BOTÓN DE REGISTRARSE ---
                 Button(
                     onClick = {
-                       if(viewModel.validarCampos()){
-                           val user = User(
-                               username = viewModel.usuario,
-                               password = viewModel.contrasena,
-                               email = viewModel.email
-                           )
-                           viewModel.addUser(user)
-                           // Navega hacia atrás.
-                           onBack()
-                       }
+                        viewModel.intentarRegistro {
+                            onBack()
+                        }
                     },
                     modifier = Modifier
                         .fillMaxWidth()

@@ -34,7 +34,7 @@ val DarkOverlay = Color(0xFF000000).copy(alpha = 0.7f)
 val CardBackground = Color(0xFF1E1E1E).copy(alpha = 0.5f)
 
 @Composable
-fun HomeScreen(navController: NavHostController) {
+fun HomeScreen(navController: NavHostController, userName: String) {
     // Estado para controlar el menú desplegable
     var expanded by remember { mutableStateOf(false) }
 
@@ -121,11 +121,19 @@ fun HomeScreen(navController: NavHostController) {
                     ) {
                         DropdownMenuItem(
                             text = { Text("CAMBIAR CONTRASEÑA", color = NeonCyan) },
-                            onClick = { expanded = false }
+                            onClick = { navController.navigate("recovery") }
                         )
                         DropdownMenuItem(
                             text = { Text("CERRAR SESIÓN", color = NeonCyan) },
-                            onClick = { expanded = false }
+                            onClick = {
+                                navController.navigate("login") {
+                                    //Bloque de codigo para eliminar la pila deanavegacion una vez navegado a la screen deseada
+                                    popUpTo(0){
+                                        inclusive = true
+                                    }
+                                    launchSingleTop = true
+                                }
+                            }
                         )
                     }
                 }
@@ -135,7 +143,7 @@ fun HomeScreen(navController: NavHostController) {
 
             // --- BIENVENIDA ---
             Text(
-                text = "BIENVENIDO, USUARIO0123",
+                text = "BIENVENIDO  ${userName.uppercase()}",
                 style = TextStyle(
                     color = Color.White,
                     fontSize = 22.sp,
@@ -227,16 +235,5 @@ fun CyberpunkInfoCard(text: String) {
             ),
             modifier = Modifier.padding(horizontal = 16.dp)
         )
-    }
-}
-
-@Preview(showBackground = true, heightDp = 800, widthDp = 360)
-@Composable
-fun HomeScreenPreview() {
-    val navController = rememberNavController()
-    // Nota: Para que el preview funcione, asegúrate de tener imágenes temporales
-    // o comenta los componentes Image si no tienes los recursos aún.
-    MaterialTheme {
-        HomeScreen(navController = navController)
     }
 }
