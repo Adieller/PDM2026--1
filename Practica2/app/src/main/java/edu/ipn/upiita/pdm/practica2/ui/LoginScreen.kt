@@ -28,8 +28,10 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import edu.ipn.upiita.pdm.practica2.R
+import edu.ipn.upiita.pdm.practica2.viewmodel.LoginViewModel
 
 // Definición de colores para el tema neón
 val NeonPurple = Color(0xFFB388FF)
@@ -38,7 +40,7 @@ val NeonBlue = Color(0xFF2979FF)
 val DarkBackground = Color(0xFF121212).copy(alpha = 0.8f)
 val FieldBackgroundColor = Color(0xFF1E1E1E).copy(alpha = 0.7f)
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun LoginScreen(navController: NavHostController, viewModel: LoginViewModel = viewModel()) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         // Hacemos el fondo del Scaffold transparente para que se vea tu imagen
@@ -96,19 +98,21 @@ fun LoginScreen(navController: NavHostController) {
 
                 // Campo de texto de Usuario
                 NeonTextField(
-                    value = "",
-                    onValueChange = {},
-                    placeholder = "NOMBRE DE USUARIO"
+                    value = viewModel.usuario,
+                    onValueChange = { viewModel.usuario = it},
+                    placeholder = "NOMBRE DE USUARIO",
+                    error = viewModel.usuarioError
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
                 // Campo de texto de Contraseña
                 NeonTextField(
-                    value = "",
-                    onValueChange = {},
+                    value = viewModel.contrasena,
+                    onValueChange = {viewModel.contrasena = it},
                     placeholder = "CONTRASEÑA",
-                    isPassword = true
+                    isPassword = true,
+                    error = viewModel.contrasenaError
                 )
 
                 Spacer(modifier = Modifier.height(36.dp))
@@ -116,7 +120,15 @@ fun LoginScreen(navController: NavHostController) {
                 // Botón de Entrar
                 Button(
                     //En el onne click poner la funcion que valide el nombre y contraseña para que pase a ala siguiente ventana
-                    onClick = { navController.navigate("home") },
+                    onClick = {
+                        viewModel.validarLogin(
+                            onLoginSuccess = {
+                                navController.navigate("home") {
+                                    popUpTo("login") { inclusive = true }
+                                }
+                            }
+                        )
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp)

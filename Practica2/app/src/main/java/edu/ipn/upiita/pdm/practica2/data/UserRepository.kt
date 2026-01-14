@@ -2,7 +2,7 @@ package edu.ipn.upiita.pdm.practica2.data
 
 import edu.ipn.upiita.pdm.practica2.model.User
 import kotlinx.coroutines.flow.Flow
-import kotlin.text.insert
+
 /**
  * Un repositorio que gestiona el acceso a los datos de usuario.
  * Actúa como intermediario entre el ViewModel y la fuente de datos (la base de datos Room).
@@ -25,5 +25,10 @@ class UserRepository(private val userDao: UserDao) {
     suspend fun insert(user: User) {
         userDao.insert(user)
     }
+
+    suspend fun getUserByUsername(username: String): User? {
+        return userDao.getUserByUsername(username)
+    }
+
 
 }

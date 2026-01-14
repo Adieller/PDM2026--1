@@ -7,13 +7,23 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import edu.ipn.upiita.pdm.practica2.data.UserRepository
 import edu.ipn.upiita.pdm.practica2.viewmodel.FormRegViewModel
+import edu.ipn.upiita.pdm.practica2.viewmodel.LoginViewModel
+import edu.ipn.upiita.pdm.practica2.viewmodel.LoginViewModelFactory
 import edu.ipn.upiita.pdm.practica2.viewmodel.UserViewModelFactory
 
 @Composable
 fun Navigator(userRepository: UserRepository) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "login") {
-        composable("login") { LoginScreen(navController) }
+        composable("login") {
+            val viewModel: LoginViewModel = viewModel(
+                factory = LoginViewModelFactory(userRepository)
+            )
+            LoginScreen(
+                navController,
+                viewModel
+            )
+        }
         composable("recovery") { RecoveryScreen(navController) }
         composable("registro") {
             val viewModel: FormRegViewModel = viewModel(

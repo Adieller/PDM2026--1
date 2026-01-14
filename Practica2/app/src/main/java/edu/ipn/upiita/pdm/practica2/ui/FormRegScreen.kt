@@ -17,6 +17,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -88,7 +89,8 @@ fun FormRegScreen(navController: NavHostController,viewModel: FormRegViewModel =
                 NeonTextField(
                     value = viewModel.usuario,
                     onValueChange = { viewModel.usuario = it },
-                    placeholder = "USUARIO"
+                    placeholder = "USUARIO",
+                    error = viewModel.usuarioError
 
                 )
 
@@ -99,6 +101,7 @@ fun FormRegScreen(navController: NavHostController,viewModel: FormRegViewModel =
                     value = viewModel.contrasena,
                     onValueChange = { viewModel.contrasena = it },
                     placeholder = "CONTRASEÑA",
+                    error = viewModel.contrasenaError,
                     isPassword = true
                 )
 
@@ -109,6 +112,7 @@ fun FormRegScreen(navController: NavHostController,viewModel: FormRegViewModel =
                     value = viewModel.confirmarContrasena,
                     onValueChange = { viewModel.confirmarContrasena = it },
                     placeholder = "CONFIRMAR CONTRASEÑA",
+                    error = viewModel.confirmarContrasenaError,
                     isPassword = true
                 )
 
@@ -118,8 +122,10 @@ fun FormRegScreen(navController: NavHostController,viewModel: FormRegViewModel =
                 NeonTextField(
                     value = viewModel.email,
                     onValueChange = { viewModel.email = it },
-                    placeholder = "EMAIL"
-                    // Nota: Para mejorar la UX, podrías pasar un keyboardOptions aquí para tipo Email
+                    error = viewModel.emailError,
+                    placeholder = "EMAIL",
+                    keyboardType = KeyboardType.Email
+
                 )
 
                 Spacer(modifier = Modifier.height(40.dp))
