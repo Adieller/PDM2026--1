@@ -22,6 +22,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -178,30 +179,56 @@ fun LoginScreen(navController: NavHostController) {
 fun NeonTextField(
     value: String,
     onValueChange: (String) -> Unit,
+    error: String? = null,
+    keyboardType: KeyboardType = KeyboardType.Text, // 1. Recibimos el tipo aquí
     placeholder: String,
     isPassword: Boolean = false
 ) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        placeholder = { Text(text = placeholder, color = Color.Gray) },
-        modifier = Modifier.fillMaxWidth(),
-        textStyle = TextStyle(color = Color.White, fontSize = 16.sp),
-        shape = RoundedCornerShape(16.dp),
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = FieldBackgroundColor, // En M3 usa focusedContainerColor/unfocusedContainerColor en lugar de solo containerColor
-            unfocusedContainerColor = FieldBackgroundColor,
-            focusedBorderColor = NeonCyan,
-            unfocusedBorderColor = NeonPurple.copy(alpha = 0.6f),
-            cursorColor = NeonCyan,
-            // Asegúrate de que los colores del texto también sean correctos si es necesario
-            focusedTextColor = Color.White,
-            unfocusedTextColor = Color.White
-        ),
-        visualTransformation = if (isPassword) PasswordVisualTransformation() else androidx.compose.ui.text.input.VisualTransformation.None,
-        keyboardOptions = if (isPassword) KeyboardOptions(keyboardType = KeyboardType.Password) else KeyboardOptions.Default,
-        singleLine = true
-    )
+    // 2. Necesitamos un contenedor (Column) para apilar el Input y el Texto de Error
+    Column(modifier = Modifier.fillMaxWidth()) {
+        OutlinedTextField(
+            value = value,
+            onValueChange = onValueChange,
+            placeholder = { Text(text = placeholder, color = Color.Gray) },
+            modifier = Modifier.fillMaxWidth(),
+            isError = error != null,
+            textStyle = TextStyle(color = Color.White, fontSize = 16.sp),
+            shape = RoundedCornerShape(16.dp),
+
+            // 3. Colores corregidos para Material 3
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedContainerColor = FieldBackgroundColor,
+                unfocusedContainerColor = FieldBackgroundColor,
+                focusedBorderColor = NeonCyan,
+                unfocusedBorderColor = NeonPurple.copy(alpha = 0.6f),
+                cursorColor = NeonCyan,
+                focusedTextColor = Color.White,
+                unfocusedTextColor = Color.White,
+                errorContainerColor = FieldBackgroundColor, // Mantiene fondo si hay error
+                errorBorderColor = MaterialTheme.colorScheme.error
+            ),
+
+            // 4. Lógica de VisualTransformation (Contraseña vs Texto)
+            visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
+
+            // 5. Unificación de KeyboardOptions (Evita duplicados)
+            keyboardOptions = KeyboardOptions(
+                keyboardType = if (isPassword) KeyboardType.Password else keyboardType
+            ),
+            singleLine = true
+        )
+
+        // 6. El bloque de error va FUERA del OutlinedTextField, pero DENTRO de la Column
+        if (error != null) {
+            Text(
+                text = error,
+                color = MaterialTheme.colorScheme.error,
+                // Nota: displayMedium es gigante, he puesto bodySmall para un error normal
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+            )
+        }
+    }
 }
 
 @Preview(showBackground = true, widthDp = 360, heightDp = 740)

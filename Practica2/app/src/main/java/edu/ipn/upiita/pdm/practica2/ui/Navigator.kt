@@ -17,10 +17,19 @@ fun Navigator(userRepository: UserRepository) {
         composable("recovery") { RecoveryScreen(navController) }
         composable("registro") {
             val viewModel: FormRegViewModel = viewModel(
+
                 factory = UserViewModelFactory(userRepository)
             )
 
-            FormRegScreen(navController, viewModel)
+            FormRegScreen(
+                navController,
+                viewModel,
+                onBack = {
+                    // Cuando el registro se completa o se presiona "atrás",
+                    // volvemos a la pantalla anterior en la pila de navegación.
+                    navController.popBackStack()
+                }
+            )
         }
         composable("home") { HomeScreen(navController) }
 

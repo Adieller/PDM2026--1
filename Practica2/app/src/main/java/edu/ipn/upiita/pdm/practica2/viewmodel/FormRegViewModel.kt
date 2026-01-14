@@ -1,5 +1,9 @@
 package edu.ipn.upiita.pdm.practica2.viewmodel
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -9,9 +13,64 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.util.regex.Pattern
 import kotlin.text.insert
 
 class FormRegViewModel(private val repository: UserRepository) : ViewModel() {
+
+    var usuario by mutableStateOf("")
+    var contrasena by mutableStateOf("")
+    var confirmarContrasena by mutableStateOf("")
+    var email by mutableStateOf("")
+
+    var usuarioError  by mutableStateOf<String?>(null)
+    var contrasenaError  by mutableStateOf<String?>(null)
+    var confirmarContrasenaError  by mutableStateOf<String?>(null)
+    var emailError  by mutableStateOf<String?>(null)
+
+    var registroExitoso by mutableStateOf(false)
+
+    fun validarCampos(): Boolean {
+        var isValid = true
+
+        usuarioError = if (usuario.isBlank()) {
+            isValid = false
+            "El nombre es obligatorio"
+        } else null
+
+        emailError = if (!isEmailValido(email)) {
+            isValid = false
+            "Correo no válido"
+        } else null
+
+        contrasenaError = if (!isValidPassword(contrasena)) {
+            isValid = false
+            "La contraseña debe tener al menos 8 caracteres,un numero, una mayuscula y un signo especial"
+        } else null
+
+        confirmarContrasenaError = if (confirmarContrasena != contrasena) {
+            isValid = false
+            "Las contraseñas no coinciden"
+        } else null
+
+        registroExitoso = isValid
+        return isValid
+    }
+
+    private fun isEmailValido(email: String): Boolean {
+        val pattern = Pattern.compile(
+            "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
+        )
+        return pattern.matcher(email).matches()
+    }
+    private fun isValidPassword(password: String): Boolean {
+        val pattern = Pattern.compile(
+            "^(?=.*[A-Z])(?=.*[0-9])(?=.*[_.#$?]).{8,}$"
+        )
+        return pattern.matcher(password).matches()
+    }
+
+
     /**
      * Una lista de usuarios expuesta como `StateFlow`.
      *

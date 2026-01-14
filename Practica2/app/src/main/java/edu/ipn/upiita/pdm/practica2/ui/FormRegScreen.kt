@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -18,7 +17,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,17 +27,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import edu.ipn.upiita.pdm.practica2.viewmodel.FormRegViewModel
 import edu.ipn.upiita.pdm.practica2.R
+import edu.ipn.upiita.pdm.practica2.model.User
 
 
 @Composable
-fun FormRegScreen(navController: NavHostController,viewModel: FormRegViewModel = viewModel()){
+fun FormRegScreen(navController: NavHostController,viewModel: FormRegViewModel = viewModel(),onBack: () -> Unit){
 // --- ESTADOS PARA LOS CAMPOS DEL FORMULARIO ---
-    // Aquí se guardará lo que el usuario escribe.
-    // Necesitas esta parte para que el UI se actualice al escribir.
-    var usuarioState by remember { mutableStateOf("") }
-    var contrasenaState by remember { mutableStateOf("") }
-    var confirmarContrasenaState by remember { mutableStateOf("") }
-    var emailState by remember { mutableStateOf("") }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -93,17 +86,18 @@ fun FormRegScreen(navController: NavHostController,viewModel: FormRegViewModel =
 
                 // 1. Usuario
                 NeonTextField(
-                    value = usuarioState,
-                    onValueChange = { usuarioState = it },
+                    value = viewModel.usuario,
+                    onValueChange = { viewModel.usuario = it },
                     placeholder = "USUARIO"
+
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
 
                 // 2. Contraseña
                 NeonTextField(
-                    value = contrasenaState,
-                    onValueChange = { contrasenaState = it },
+                    value = viewModel.contrasena,
+                    onValueChange = { viewModel.contrasena = it },
                     placeholder = "CONTRASEÑA",
                     isPassword = true
                 )
@@ -112,8 +106,8 @@ fun FormRegScreen(navController: NavHostController,viewModel: FormRegViewModel =
 
                 // 3. Confirmar Contraseña
                 NeonTextField(
-                    value = confirmarContrasenaState,
-                    onValueChange = { confirmarContrasenaState = it },
+                    value = viewModel.confirmarContrasena,
+                    onValueChange = { viewModel.confirmarContrasena = it },
                     placeholder = "CONFIRMAR CONTRASEÑA",
                     isPassword = true
                 )
@@ -122,8 +116,8 @@ fun FormRegScreen(navController: NavHostController,viewModel: FormRegViewModel =
 
                 // 4. Email
                 NeonTextField(
-                    value = emailState,
-                    onValueChange = { emailState = it },
+                    value = viewModel.email,
+                    onValueChange = { viewModel.email = it },
                     placeholder = "EMAIL"
                     // Nota: Para mejorar la UX, podrías pasar un keyboardOptions aquí para tipo Email
                 )
@@ -133,14 +127,16 @@ fun FormRegScreen(navController: NavHostController,viewModel: FormRegViewModel =
                 // --- BOTÓN DE REGISTRARSE ---
                 Button(
                     onClick = {
-                        // ===========================================================
-                        // TODO: ESPACIO PARA TU LÓGICA
-                        // 1. Validar que los campos no estén vacíos.
-                        // 2. Validar que contrasenaState == confirmarContrasenaState.
-                        // 3. Validar formato de email.
-                        // 4. Si todo es correcto, proceder con el registro (Firebase, API, etc.)
-                        // 5. Si es exitoso, navegar: navController.navigate("login") o "home"
-                        // ===========================================================
+                       if(viewModel.validarCampos()){
+                           val user = User(
+                               username = viewModel.usuario,
+                               password = viewModel.contrasena,
+                               email = viewModel.email
+                           )
+                           viewModel.addUser(user)
+                           // Navega hacia atrás.
+                           onBack()
+                       }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -190,16 +186,5 @@ fun FormRegScreen(navController: NavHostController,viewModel: FormRegViewModel =
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true, heightDp = 800, widthDp = 360)
-@Composable
-fun FormRegScreenPreview() {
-    val navController = rememberNavController()
-    // Nota: Para que el preview funcione, asegúrate de tener imágenes temporales
-    // o comenta los componentes Image si no tienes los recursos aún.
-    MaterialTheme {
-        FormRegScreen(navController = navController)
     }
 }
