@@ -37,6 +37,9 @@ import com.example.pruebaproyectov1.R
 import com.example.pruebaproyectov1.model.Task
 import com.example.pruebaproyectov1.viewmodel.TaskViewModel
 
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.ui.window.Dialog
+
 // Definición de colores (Asegúrate de tenerlos, si no, ajústalos a tu Theme)
 val DarkOverlay = Color(0xFF000000).copy(alpha = 0.85f) // Un poco más oscuro para resaltar la lista
 val CardBackground = Color(0xFF1E1E1E).copy(alpha = 0.7f)
@@ -44,18 +47,20 @@ val CardBackground = Color(0xFF1E1E1E).copy(alpha = 0.7f)
 @Composable
 fun HomeScreen(
     navController: NavHostController,
-    taskViewModel: TaskViewModel, // Inyectamos el ViewModel
-    userId: Long, // Necesitamos el ID para cargar las tareas
+    taskViewModel: TaskViewModel,
+    userId: Long,
     userName: String
 ) {
-    // 1. Estado para el menú y la nueva tarea
+    // 1. Estados existentes
     var expanded by remember { mutableStateOf(false) }
     var newTaskTitle by remember { mutableStateOf("") }
 
-    // 2. Observamos la lista de tareas del ViewModel
+    // 2. NUEVOS ESTADOS PARA EDICIÓN
+    var showEditDialog by remember { mutableStateOf(false) }
+    var taskToEdit by remember { mutableStateOf<Task?>(null) }
+
     val tasks by taskViewModel.tasks.collectAsState()
 
-    // 3. Cargar tareas al iniciar la pantalla
     LaunchedEffect(userId) {
         taskViewModel.setUserId(userId)
     }
@@ -63,7 +68,7 @@ fun HomeScreen(
     Box(modifier = Modifier.fillMaxSize()) {
         // --- FONDO ---
         Image(
-            painter = painterResource(id = R.drawable.fondo_homefa), // Tu fondo
+            painter = painterResource(id = R.drawable.fondo_homefa),
             contentDescription = "Fondo Home",
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
@@ -77,86 +82,49 @@ fun HomeScreen(
                 .padding(top = 40.dp, start = 16.dp, end = 16.dp, bottom = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-            // --- BARRA SUPERIOR (Igual que antes) ---
+            // ... (TopBar y Sección de Usuario igual que antes) ...
             TopBarCyberpunk(userName, expanded, { expanded = it }, navController)
-
             Spacer(modifier = Modifier.height(20.dp))
 
-            // --- SECCIÓN DE USUARIO (Versión Compacta) ---
-            // He compactado un poco el avatar para dar espacio a la lista
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier.size(80.dp) // Más pequeño para que quepan las tareas
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(80.dp)
-                            .border(2.dp, Brush.sweepGradient(listOf(NeonCyan, NeonPurple, NeonCyan)), CircleShape)
-                    )
-                    Image(
-                        painter = painterResource(id = R.drawable.icono_fallenangels),
-                        contentDescription = "Avatar",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.size(70.dp).clip(CircleShape)
-                    )
+            // Sección Usuario (Resumida para ahorrar espacio visual en el código)
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
+                // ... (Código del avatar igual que antes) ...
+                Box(contentAlignment = Alignment.Center, modifier = Modifier.size(80.dp)) {
+                    Box(modifier = Modifier.size(80.dp).border(2.dp, Brush.sweepGradient(listOf(NeonCyan, NeonPurple, NeonCyan)), CircleShape))
+                    Image(painter = painterResource(id = R.drawable.icono_fallenangels), contentDescription = null, contentScale = ContentScale.Crop, modifier = Modifier.size(70.dp).clip(CircleShape))
                 }
                 Spacer(modifier = Modifier.width(16.dp))
                 Column {
-                    Text(
-                        text = "AGENTE: ${userName.uppercase()}",
-                        style = TextStyle(color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                    )
-                    Text(
-                        text = "ESTADO: EN LÍNEA",
-                        style = TextStyle(color = NeonCyan, fontSize = 12.sp)
-                    )
+                    Text("AGENTE: ${userName.uppercase()}", style = TextStyle(color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold))
+                    Text("ESTADO: EN LÍNEA", style = TextStyle(color = NeonCyan, fontSize = 12.sp))
                 }
             }
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // --- INPUT NUEVA TAREA ---
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            // ... (Input Nueva Tarea igual que antes) ...
+            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 OutlinedTextField(
                     value = newTaskTitle,
                     onValueChange = { newTaskTitle = it },
                     label = { Text("NUEVA MISIÓN", color = NeonCyan.copy(alpha = 0.7f)) },
                     singleLine = true,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = NeonCyan,
-                        unfocusedBorderColor = NeonPurple,
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        cursorColor = NeonCyan,
-                        focusedLabelColor = NeonCyan,
-                        unfocusedLabelColor = NeonPurple
+                        focusedBorderColor = NeonCyan, unfocusedBorderColor = NeonPurple,
+                        focusedTextColor = Color.White, unfocusedTextColor = Color.White,
+                        cursorColor = NeonCyan, focusedLabelColor = NeonCyan, unfocusedLabelColor = NeonPurple
                     ),
                     modifier = Modifier.weight(1f)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-
-                // Botón de agregar (+)
                 IconButton(
                     onClick = {
                         if (newTaskTitle.isNotBlank()) {
                             taskViewModel.addTask(newTaskTitle)
-                            newTaskTitle = "" // Limpiar campo
+                            newTaskTitle = ""
                         }
                     },
-                    modifier = Modifier
-                        .size(50.dp)
-                        .background(
-                            brush = Brush.linearGradient(listOf(NeonPurple, NeonCyan)),
-                            shape = RoundedCornerShape(12.dp)
-                        )
+                    modifier = Modifier.size(50.dp).background(Brush.linearGradient(listOf(NeonPurple, NeonCyan)), RoundedCornerShape(12.dp))
                 ) {
                     Icon(Icons.Default.Add, contentDescription = "Agregar", tint = Color.White)
                 }
@@ -184,20 +152,38 @@ fun HomeScreen(
                     TaskItemCyberpunk(
                         task = task,
                         onToggle = { taskViewModel.toggleTaskCompletion(task) },
-                        onDelete = { taskViewModel.deleteTask(task) }
+                        onDelete = { taskViewModel.deleteTask(task) },
+                        // PASAMOS LA ACCIÓN DE EDITAR
+                        onEdit = {
+                            taskToEdit = task
+                            showEditDialog = true
+                        }
                     )
                 }
             }
         }
+
+        // 3. LÓGICA DEL DIÁLOGO FLOTANTE
+        if (showEditDialog && taskToEdit != null) {
+            CyberpunkEditDialog(
+                initialText = taskToEdit!!.title,
+                onDismiss = { showEditDialog = false },
+                onConfirm = { newTitle ->
+                    taskViewModel.updateTaskTitle(taskToEdit!!, newTitle)
+                    showEditDialog = false
+                }
+            )
+        }
     }
 }
 
-// --- COMPONENTE: ITEM DE TAREA ---
+// --- ITEM DE TAREA MODIFICADO (Con botón Editar) ---
 @Composable
 fun TaskItemCyberpunk(
     task: Task,
     onToggle: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    onEdit: () -> Unit // Nuevo parámetro
 ) {
     val borderColor = if (task.isDone) Color.Gray else NeonCyan
     val textColor = if (task.isDone) Color.Gray else Color.White
@@ -214,15 +200,12 @@ fun TaskItemCyberpunk(
                 shape = RoundedCornerShape(12.dp)
             )
             .background(CardBackground, RoundedCornerShape(12.dp))
-            .clickable { onToggle() } // Tocar toda la tarjeta cambia el estado
+            .clickable { onToggle() }
     ) {
         Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
+            modifier = Modifier.padding(16.dp).fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Checkbox estilo icono
             Icon(
                 imageVector = if (task.isDone) Icons.Default.TaskAlt else Icons.Default.RadioButtonUnchecked,
                 contentDescription = "Estado",
@@ -232,30 +215,96 @@ fun TaskItemCyberpunk(
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            // Título de la tarea
             Text(
                 text = task.title,
-                style = TextStyle(
-                    color = textColor,
-                    fontSize = 16.sp,
-                    textDecoration = textDecoration
-                ),
+                style = TextStyle(color = textColor, fontSize = 16.sp, textDecoration = textDecoration),
                 modifier = Modifier.weight(1f)
             )
 
-            // Botón Eliminar
+            // BOTÓN EDITAR (Lápiz)
+            IconButton(onClick = onEdit) {
+                Icon(
+                    imageVector = Icons.Default.Edit,
+                    contentDescription = "Editar",
+                    tint = NeonCyan // Color brillante para resaltar
+                )
+            }
+
+            // BOTÓN BORRAR
             IconButton(onClick = onDelete) {
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = "Eliminar",
-                    tint = Color(0xFFFF4444) // Rojo para borrar
+                    tint = Color(0xFFFF4444)
                 )
             }
         }
     }
 }
 
-// --- COMPONENTE: BARRA SUPERIOR (Extraído para limpieza) ---
+// --- NUEVO COMPONENTE: DIÁLOGO DE EDICIÓN ---
+@Composable
+fun CyberpunkEditDialog(
+    initialText: String,
+    onDismiss: () -> Unit,
+    onConfirm: (String) -> Unit
+) {
+    var text by remember { mutableStateOf(initialText) }
+
+    Dialog(onDismissRequest = onDismiss) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(2.dp, Brush.linearGradient(listOf(NeonPurple, NeonCyan)), RoundedCornerShape(16.dp))
+                .background(Color(0xFF121212), RoundedCornerShape(16.dp))
+                .padding(24.dp)
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    "ACTUALIZAR MISIÓN",
+                    style = TextStyle(color = NeonCyan, fontWeight = FontWeight.Bold, fontSize = 18.sp, letterSpacing = 1.sp)
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                OutlinedTextField(
+                    value = text,
+                    onValueChange = { text = it },
+                    singleLine = true,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = NeonPurple,
+                        unfocusedBorderColor = Color.Gray,
+                        focusedTextColor = Color.White,
+                        unfocusedTextColor = Color.White,
+                        cursorColor = NeonPurple
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    // Botón Cancelar
+                    TextButton(onClick = onDismiss) {
+                        Text("CANCELAR", color = Color.Gray)
+                    }
+
+                    // Botón Confirmar
+                    Button(
+                        onClick = { if (text.isNotBlank()) onConfirm(text) },
+                        colors = ButtonDefaults.buttonColors(containerColor = NeonPurple.copy(alpha = 0.8f)),
+                        shape = RoundedCornerShape(8.dp)
+                    ) {
+                        Text("GUARDAR", color = Color.White, fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
+        }
+    }
+}
 @Composable
 fun TopBarCyberpunk(
     userName: String,
